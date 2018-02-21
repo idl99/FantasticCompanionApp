@@ -8,8 +8,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Ihan on 2/20/2018.
@@ -22,8 +23,23 @@ public class DeviceListFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        List<String> pairedDevices = new ArrayList<>();
+
+        for(BluetoothDevice device:
+                BluetoothAdapter.getDefaultAdapter().getBondedDevices()){
+            // Getting paired device names and adding to paired devices list
+            // Can't use Bluetooth Adapter as it doesn't extend Adapter class
+            pairedDevices.add(device.getName());
+        }
+
+
+        // Using builder to create() and show() dialog fragment
+        // Using anonymous array adapter that takes the fragment as the context,
+        // default Android List-item layout and default Android-TextView as resources
+        // and pairedDevices as data
         builder.setTitle("Select your fan")
-                .setItems(new CharSequence[]{"Huawei EVAL-19", "Samsung Galaxy S5", "HC05"},
+                .setAdapter(new ArrayAdapter<>(getActivity(),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, pairedDevices),
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
