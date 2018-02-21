@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fan-tastic Companion</string>
+    <string name="Bluetooth_lblText">Bluetooth: </string>
+    <string name="Bluetooth_Connect_contentDesc">Connect to Bluetooth Device</string>
+    <string name="LED_Control_lblTxt">LED Control: </string>
+    <string name="Oscillation_lblText">Oscillation: </string>
+    <string name="AutoSwitch_lblText">Auto Switch: </string>
+    <string name="Temperature_Plans_lblText">Temperature Plans</string>
+    <string name="AddPlan_imgBtnContentDesc">Add Temperature Plan</string>
+    <string name="RemovePlan_imgBtnContentDesc">Remove Temperature Plan</string>
+</resources>
