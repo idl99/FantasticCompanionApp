@@ -43,7 +43,8 @@ public class DeviceListFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        AcceptBtConnection btConnection = new AcceptBtConnection(getActivity());
+                        btConnection.start();
                     }
                 });
 
