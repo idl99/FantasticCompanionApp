@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
     TextView btStatus; // Display Bluetooth connection status
 
     BluetoothAdapter btAdapter; // Bluetooth adapter
+
+    BluetoothArduino btDuino;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,11 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
 
     @Override
     public void onBtDeviceSelect(BluetoothDevice toConnect) {
-        // Connect to BT
-        btStatus.setText("TBC to "+toConnect.getName()); // Sets text
+        // connect to BT
+        btDuino = BluetoothArduino.getInstance(toConnect.getName());
+        btDuino.connect();
+        btConnect.setBackgroundColor(Color.parseColor("#32cd32"));
+        btStatus.setText("Connected to "+toConnect.getName()); // Sets text
     }
 
 }
