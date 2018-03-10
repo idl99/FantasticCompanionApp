@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements DeviceListFragment.OnBtDeviceSelect {
+public class MainActivity extends AppCompatActivity implements DeviceListFragment.OnBtDeviceSelectListener {
 
     ImageButton btConnect; // Bluetooth connection button
 
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         } else{
 
             if(btAdapter.isEnabled()){
-
             } else{
                 // Ask user to turn bluetooth on
                 Intent turnBtOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -61,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
     }
 
     @Override
-    public void onBtDeviceSelect(String btDeviceName) {
-        btStatus.setText("TBC to "+btDeviceName);
+    public void onBtDeviceSelect(BluetoothDevice toConnect) {
+        // Connect to BT
+        btStatus.setText("TBC to "+toConnect.getName()); // Sets text
     }
+
 }

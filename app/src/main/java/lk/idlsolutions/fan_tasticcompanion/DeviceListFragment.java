@@ -7,12 +7,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Ihan on 2/20/2018.
@@ -20,13 +20,13 @@ import java.util.List;
 
 public class DeviceListFragment extends DialogFragment {
 
-    private OnBtDeviceSelect onBtDeviceSelectListener;
+    private OnBtDeviceSelectListener onBtDeviceSelectListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            this.onBtDeviceSelectListener = (OnBtDeviceSelect) getActivity();
+            this.onBtDeviceSelectListener = (OnBtDeviceSelectListener) getActivity();
         }
         catch (final ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement OnCompleteListener");
@@ -38,13 +38,14 @@ public class DeviceListFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        final List<String> pairedBt = new ArrayList<>();
+        final Set<BluetoothDevice> pairedBt = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
 
-        for(BluetoothDevice device:
-                BluetoothAdapter.getDefaultAdapter().getBondedDevices()){
+        final List<String> pairedBtNames = new ArrayList<>();
+
+        for(BluetoothDevice device: pairedBt){
             // Getting paired device names and adding to paired devices list
             // Can't use Bluetooth Adapter as it doesn't extend Adapter class
-            pairedBt.add(device.getName());
+            pairedBtNames.add(device.getName());
         }
 
         // Using builder to create() and show() dialog fragment
@@ -53,13 +54,19 @@ public class DeviceListFragment extends DialogFragment {
         // and pairedDevices as data
         builder.setTitle("Select your fan")
                 .setAdapter(new ArrayAdapter<>(getActivity(),
-                                android.R.layout.simple_list_item_1, android.R.id.text1, pairedBt),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, pairedBtNames),
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Return the bluetooth device details to main activity
                         // Finish fragment
-                        returnBtDevice(pairedBt.get(which));
+                        String selected = pairedBtNames.get(which);
+                        // From the set, find bluetooth device where name == selected
+                        for(BluetoothDevice device: pairedBt){
+                            if(device.getName().equals(selected)){
+                                onBtDeviceSelectListener.onBtDeviceSelect(device);
+                            }
+                        }
                     }
                 });
 
@@ -67,12 +74,8 @@ public class DeviceListFragment extends DialogFragment {
 
     }
 
-    public void returnBtDevice(String btDeviceName){
-        this.onBtDeviceSelectListener.onBtDeviceSelect(btDeviceName);
-    }
-
-    public interface OnBtDeviceSelect {
-        public abstract void onBtDeviceSelect(String btDeviceName);
+    public interface OnBtDeviceSelectListener {
+        public abstract void onBtDeviceSelect(BluetoothDevice connectTo);
     }
 
 }
