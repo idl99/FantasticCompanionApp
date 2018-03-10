@@ -8,9 +8,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 public class MainActivity extends AppCompatActivity implements DeviceListFragment.OnBtDeviceSelectListener {
 
@@ -21,6 +19,12 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
     BluetoothAdapter btAdapter; // Bluetooth adapter
 
     BluetoothArduino btDuino;
+
+    ToggleButton fanStatus ;
+
+    ToggleButton oscillationStatus;
+
+    ToggleButton autoSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,33 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         btStatus = (TextView) findViewById(R.id.lbl_BluetoothStatus);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        fanStatus = (ToggleButton) findViewById(R.id.btn_ToggleLED);
+
+        oscillationStatus = (ToggleButton) findViewById(R.id.btn_ToggleOscillation);
+
+        autoSwitch = (ToggleButton) findViewById(R.id.btn_ToggleAutoSwitch);
+
+        fanStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                fanOnOffSelect(isChecked);
+            }
+        });
+
+        oscillationStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                oscillationOnOffSelect(isChecked);
+            }
+        });
+
+        autoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                autoSwitchOnOffSelect(isChecked);
+            }
+        });
 
         if(btAdapter == null){
             // Show toast message that bluetooth is not available for mobile device
@@ -70,5 +101,31 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         btConnect.setBackgroundColor(Color.parseColor("#32cd32"));
         btStatus.setText("Connected to "+toConnect.getName()); // Sets text
     }
+
+    private void fanOnOffSelect(boolean isChecked) {
+        if(isChecked){
+            btDuino.SendMessage("F1");
+        } else{
+            btDuino.SendMessage("F0");
+        }
+    }
+
+    private void oscillationOnOffSelect(boolean isChecked){
+        if(isChecked){
+            btDuino.SendMessage("O1");
+        }else{
+            btDuino.SendMessage("O0");
+        }
+    }
+
+    private void autoSwitchOnOffSelect(boolean isChecked){
+        if(isChecked){
+            btDuino.SendMessage("A1");
+        }else{
+            btDuino.SendMessage("A0");
+        }
+    }
+
+
 
 }

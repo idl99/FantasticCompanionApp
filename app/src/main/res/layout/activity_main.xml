@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:text="@string/Bluetooth_lblText"
-            android:textSize="22sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/lbl_BluetoothStatus"
@@ -47,14 +47,14 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout_LED_Control"
+        android:id="@+id/linearLayout_Fan_Control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linearLayout_Bluetooth_Connectivity"
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/lbl_LED_Control"
+            android:id="@+id/lbl_Fan_Control"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -73,7 +73,7 @@
         android:id="@+id/linearLayout_Oscillation_Control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayout_LED_Control"
+        android:layout_below="@id/linearLayout_Fan_Control"
         android:orientation="horizontal" >
 
         <TextView
