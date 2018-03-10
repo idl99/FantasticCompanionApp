@@ -11,17 +11,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Set;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeviceListFragment.OnBtDeviceSelect {
 
     ImageButton btConnect; // Bluetooth connection button
 
     TextView btStatus; // Display Bluetooth connection status
 
     BluetoothAdapter btAdapter; // Bluetooth adapter
-
-    Set<BluetoothDevice> paired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +53,15 @@ public class MainActivity extends AppCompatActivity {
         btConnect.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                DialogFragment dialogFragment = new DeviceListFragment();
-                dialogFragment.show(getFragmentManager(),"tag");
+                DialogFragment fragment = new DeviceListFragment();
+                fragment.show(getFragmentManager(),"Select BT fan");
             }
         });
 
     }
 
+    @Override
+    public void onBtDeviceSelect(String btDeviceName) {
+        btStatus.setText("TBC to "+btDeviceName);
+    }
 }

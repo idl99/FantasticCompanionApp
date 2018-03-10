@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:text="@string/Bluetooth_lblText"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/lbl_BluetoothStatus"
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:text="Not Connected"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <ImageButton
             android:id="@+id/btn_BluetoothConnect"
