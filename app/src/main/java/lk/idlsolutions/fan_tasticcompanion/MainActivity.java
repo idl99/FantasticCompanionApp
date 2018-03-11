@@ -26,24 +26,32 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
 
     ToggleButton autoSwitch;
 
+    LinearLayout tempPlansHeader;
+
+    ImageButton addPlan;
+
+    ImageButton removePlan;
+
+    LinearLayout tempPlans;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         btConnect = (ImageButton) findViewById(R.id.btn_BluetoothConnect);
-
         btStatus = (TextView) findViewById(R.id.lbl_BluetoothStatus);
-
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-
         fanStatus = (ToggleButton) findViewById(R.id.btn_ToggleLED);
-
         oscillationStatus = (ToggleButton) findViewById(R.id.btn_ToggleOscillation);
-
         autoSwitch = (ToggleButton) findViewById(R.id.btn_ToggleAutoSwitch);
+        tempPlansHeader = (LinearLayout) findViewById(R.id.linearLayout_tempPlansHeader);
+        addPlan = (ImageButton) findViewById(R.id.btn_AddPlan);
+        removePlan = (ImageButton) findViewById(R.id.btn_RemovePlan);
+        tempPlans = (LinearLayout) findViewById(R.id.linearLayout_tempPlans);
+
+        // Setting listeners for changes in toggle buttons
 
         fanStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -63,6 +71,20 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 autoSwitchOnOffSelect(isChecked);
+            }
+        });
+
+        addPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTemperaturePlan();
+            }
+        });
+
+        removePlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeTemperaturePlan();
             }
         });
 
@@ -126,6 +148,55 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         }
     }
 
+    private void addTemperaturePlan(){
+        if(tempPlans.getChildCount()>2)
+            Toast.makeText(getApplicationContext(), "You have already created the maximum number of plans",
+                    Toast.LENGTH_SHORT).show();
+        else{
+            LinearLayout plan = new LinearLayout(getApplicationContext());
+            plan.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1.0f
+            );
+            plan.setLayoutParams(param);
+            final EditText temp = new EditText(getApplicationContext());
+            temp.setHint("TEMP");
+            temp.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    0.3f
+                ));
+            plan.addView(temp);
+            final EditText speed = new EditText(getApplicationContext());
+            speed.setHint("SPEED");
+            speed.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    0.3f
+            ));
+            plan.addView(speed);
+            final Button setPlan = new Button(getApplicationContext());
+            setPlan.setText("APPLY");
+            setPlan.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    0.4f
+            ));
+            setPlan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btDuino.SendMessage("P01"+temp.getText()+speed.getText());
+                }
+            });
+            plan.addView(setPlan);
+            tempPlans.addView(plan);
+        }
+    }
 
+    private void removeTemperaturePlan(){
+        tempPlans.removeViewAt(0);
+    }
 
 }
