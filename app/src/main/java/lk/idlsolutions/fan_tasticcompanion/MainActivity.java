@@ -94,12 +94,8 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
 
             // Finish activity
             finish();
-
         } else{
-
-            if(btAdapter.isEnabled()){
-            } else{
-                // Ask user to turn bluetooth on
+            if(!btAdapter.isEnabled()){
                 Intent turnBtOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(turnBtOn,1);
             }
@@ -161,37 +157,102 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
                     1.0f
             );
             plan.setLayoutParams(param);
+            tempPlans.addView(plan);
+//            ==================================================
+            final Spinner conditionSpinner = new Spinner(getApplicationContext());
+            conditionSpinner.setAdapter(new ArrayAdapter<String>(
+                    getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
+                    new String[]{">THAN","<THAN"}
+            ));
+            conditionSpinner.setLayoutParams(new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    0.35f
+            ));
+            plan.addView(conditionSpinner);
+//            ==================================================
             final EditText temp = new EditText(getApplicationContext());
             temp.setHint("TEMP");
             temp.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    0,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
-                    0.3f
+                    0.23f
                 ));
             plan.addView(temp);
-            final EditText speed = new EditText(getApplicationContext());
-            speed.setHint("SPEED");
-            speed.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    0.3f
+//            ==================================================
+            final Spinner speedSpinner = new Spinner(getApplicationContext());
+            speedSpinner.setAdapter(new ArrayAdapter<String>(
+                    getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
+                    new String[]{"HIGH","LOW"}
             ));
-            plan.addView(speed);
-            final Button setPlan = new Button(getApplicationContext());
-            setPlan.setText("APPLY");
-            setPlan.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
+            speedSpinner.setLayoutParams(new LinearLayout.LayoutParams(
+                    0,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
-                    0.4f
+                    0.32f
+            ));
+            plan.addView(speedSpinner);
+//            ==================================================
+            final Button setPlan = new Button(getApplicationContext());
+            setPlan.setText("\u2713");
+            setPlan.setLayoutParams(new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    0.1f
             ));
             setPlan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    btDuino.SendMessage("P01"+temp.getText()+speed.getText());
+                    String condition = conditionSpinner.getSelectedItem().toString().substring(0,1);
+                    if(speedSpinner.getSelectedItem().toString()=="HIGH"){
+                        btDuino.SendMessage("TP"+condition+
+                                temp.getText()+2);
+                    } else if(speedSpinner.getSelectedItem().toString()=="LOW"){
+                        btDuino.SendMessage("TP"+condition+temp.getText()+1);
+                    }
+
                 }
             });
             plan.addView(setPlan);
-            tempPlans.addView(plan);
+//            LinearLayout plan = new LinearLayout(getApplicationContext());
+//            plan.setOrientation(LinearLayout.HORIZONTAL);
+//            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    1.0f
+//            );
+//            plan.setLayoutParams(param);
+//            final EditText temp = new EditText(getApplicationContext());
+//            temp.setHint("TEMP");
+//            temp.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    0.3f
+//                ));
+//            plan.addView(temp);
+//            final EditText speed = new EditText(getApplicationContext());
+//            speed.setHint("SPEED");
+//            speed.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    0.3f
+//            ));
+//            plan.addView(speed);
+//            final Button setPlan = new Button(getApplicationContext());
+//            setPlan.setText("APPLY");
+//            setPlan.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    0.4f
+//            ));
+//            setPlan.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    btDuino.SendMessage("P01"+temp.getText());
+//                    Log.d("test","this works");
+//                }
+//            });
+//            plan.addView(setPlan);
+//            tempPlans.addView(plan);
         }
     }
 
